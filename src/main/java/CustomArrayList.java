@@ -9,19 +9,19 @@ public class CustomArrayList<T> {
 
     private int size;
 
-    /* Constructor that creates list with default initial capacity */
+    /** Constructor that creates list with default initial capacity */
     public CustomArrayList() {
         capacity = 10;
         array = (T[]) new Object[capacity];
     }
 
-    /* Constructor that creates list with specified capacity */
+    /** Constructor that creates list with specified capacity */
     public CustomArrayList(int capacity) {
         this.capacity = capacity;
         array = (T[]) new Object[capacity];
     }
 
-    /* Adds element at the end of list */
+    /** Adds element at the end of list */
     public void add(T element) {
         if(size == capacity) {
             increaseCapacity();
@@ -30,21 +30,19 @@ public class CustomArrayList<T> {
         size++;
     }
 
-    /* Adds element at specified position */
+    /** Adds element at specified position */
     public void add(int index, T element) {
         if(index <= size && index >= 0) {
             if (size == capacity) {
                 increaseCapacity();
             }
-            for(int i = index + 1; i <= size; i++) {
-                array[i] = array[i - 1];
-            }
+            System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = element;
             size++;
         }
     }
 
-    /* Returns element by specified index */
+    /** Returns element by specified index */
     public T get(int index) {
         if(index < size && index >= 0) {
             return array[index];
@@ -52,7 +50,7 @@ public class CustomArrayList<T> {
         return null;
     }
 
-    /* Returns first occurrence of specified element. Returns -1 if list doesn't contain specified element */
+    /** Returns first occurrence of specified element. Returns -1 if list doesn't contain specified element */
     public int indexOf(Object element) {
         for(int i = 0; i < size; i++) {
             if(array[i].equals(element)) {
@@ -62,34 +60,30 @@ public class CustomArrayList<T> {
         return -1;
     }
 
-    /* Removes element by specified index */
+    /** Removes element by specified index */
     public T remove(int index) {
         T removingElement = null;
         if(index < size && index >= 0) {
             removingElement = array[index];
-            for(int i = index; i < size; i++) {
-                array[i] = array[i + 1];
-            }
                 size--;
+            System.arraycopy(array, index + 1, array, index, size - index);
         }
         return removingElement;
     }
 
-    /* Removes first occurrence of specified element */
+    /** Removes first occurrence of specified element */
     public boolean remove(Object element) {
         for(int i = 0; i < size; i++) {
             if(array[i].equals(element)) {
-                for(int j = i; j < size; j ++) {
-                    array[j] = array[j + 1];
-                }
                 size--;
+                System.arraycopy(array, i + 1, array, i, size - i);
                 return true;
             }
         }
         return false;
     }
 
-    /* Removes all elements from the list */
+    /** Removes all elements from the list */
     public void clear() {
         if(size > 0) {
             for(int i = 0; i < size; i++) {
@@ -99,38 +93,36 @@ public class CustomArrayList<T> {
         size = 0;
     }
 
-    /* Sorts the list */
+    /** Sorts the list */
     public void sort(Comparator<? super T> comparator) {
         int low = 0;
         int high = size - 1;
         quickSort(array, low, high, comparator);
     }
 
-    /* Replaces element in specified position */
+    /** Replaces element in specified position */
     public void set(int index, T element) {
         if(index < size && index >= 0) {
             array[index] = element;
         }
     }
 
-    /* Returns size of the list */
+    /** Returns size of the list */
     public int size() {
         return size;
     }
 
 
-    /* Increases the capacity of the array */
+    /** Increases the capacity of the array */
     private void increaseCapacity() {
         double extendedCapacity = capacity * 1.5;
         capacity = (int) extendedCapacity;
         T[] extendedArray = (T[]) new Object[capacity];
-        for(int i = 0; i < size; i++) {
-            extendedArray[i] = array[i];
-        }
+        System.arraycopy(array, 0, extendedArray, 0, array.length);
         array = extendedArray;
     }
 
-    /* Returns the array as string */
+    /** Returns the array as string */
     public String toString() {
         if(size > 0) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -144,7 +136,7 @@ public class CustomArrayList<T> {
         }
     }
 
-    /* Sorts array by quicksort algorithm */
+    /** Sorts array by quicksort algorithm */
     private void quickSort(T[] array, int low, int high, Comparator<? super T> comparator) {
         if (array.length == 0) {
             return;
